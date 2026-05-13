@@ -54,8 +54,13 @@ app.post("/api/auth/register", async (req, res) => {
         role: user.role,
       },
     });
-  } catch (error) {
-    res.status(500).json({ message: "Registration failed" });
+  } catch (error: any) {
+    console.error("Registration error:", error);
+    res.status(500).json({
+      message: "Registration failed",
+      errorMessage: error.message,
+      errorCode: error.code,
+    });
   }
 });
 
