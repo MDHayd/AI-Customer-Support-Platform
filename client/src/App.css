@@ -160,3 +160,75 @@ button {
   background: #dbeafe;
   color: #1d4ed8;
 }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal {
+  width: 100%;
+  max-width: 520px;
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.modal-header h3 {
+  margin: 0;
+}
+
+.close-btn {
+  background: #f1f5f9;
+  color: #172033;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  font-size: 22px;
+  padding: 0;
+}
+
+.ticket-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ticket-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 700;
+  color: #344054;
+}
+
+.ticket-form input,
+.ticket-form textarea,
+.ticket-form select {
+  border: 1px solid #d0d5dd;
+  border-radius: 10px;
+  padding: 12px;
+  font: inherit;
+}
+
+.ticket-form textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.submit-btn {
+  margin-top: 8px;
+}
