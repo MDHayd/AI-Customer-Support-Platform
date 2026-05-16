@@ -22,6 +22,8 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+//-------------------------------------------------------------------------------------------------
+
 app.post("/api/auth/register", async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -64,6 +66,8 @@ app.post("/api/auth/register", async (req, res) => {
   }
 });
 
+//-----------------------------------------------------------------------------
+
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -103,6 +107,63 @@ app.post("/api/auth/login", async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: "Login failed" });
+  }
+});
+
+app.post("/api/tickets", async (req, res) => {
+  try {
+    const { title, description, category, priority, customerId } = req.body;
+
+    const ticket = await prisma.ticket.create({
+      data: {
+        title,
+        description,
+        category,
+        priority: priority || "LOW",
+        customerId,
+      },
+    });
+
+    res.status(201).json({
+      message: "Ticket created successfully",
+      ticket,
+    });
+  } catch (error: any) {
+    console.error("Create ticket error:", error);
+    res.status(500).json({
+      message: "Failed to create ticket",
+      errorMessage: error.message,
+    });
+  }
+});
+
+//----------------------------------------------------------------------------------------------npm run dev
+
+app.get("/api/tickets", async (req, res) => {
+  try {
+    const tickets = await prisma.ticket.findMany({
+      include: {
+        customer: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    res.json(tickets);
+  } catch (error: any) {
+    console.error("Fetch tickets error:", error);
+    res.status(500).json({
+      message: "Failed to fetch tickets",
+      errorMessage: error.message,
+    });
   }
 });
 
