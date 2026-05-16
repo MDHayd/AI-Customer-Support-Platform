@@ -167,6 +167,44 @@ app.get("/api/tickets", async (req, res) => {
   }
 });
 
+//----------------------------------------------------------------------------------------------
+
+app.patch("/api/tickets/:id/status", async (req, res) => {
+  try {
+    const ticketId = Number(req.params.id);
+    const { status } = req.body;
+
+    const allowedStatuses = ["OPEN", "IN_PROGRESS", "RESOLVED"];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        message: "Invalid status",
+        allowedStatuses,
+      });
+    }
+
+    const updatedTicket = await prisma.ticket.update({
+      where: {
+        id: ticketId,
+      },
+      data: {
+        status,
+      },
+    });
+
+    res.json({
+      message: "Ticket status updated successfully",
+      ticket: updatedTicket,
+    });
+  } catch (error: any) {
+    console.error("Update ticket status error:", error);
+    res.status(500).json({
+      message: "Failed to update ticket status",
+      errorMessage: error.message,
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
