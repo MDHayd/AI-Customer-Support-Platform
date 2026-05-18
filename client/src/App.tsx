@@ -1,21 +1,33 @@
-import './App.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+import "./App.css";
+
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+};
 
 type Ticket = {
   id: number;
   title: string;
+  description: string;
   category: string;
   priority: string;
   status: string;
   customer: {
-      name : string;
-      email: string;
+    name: string;
+    email: string;
   };
 };
 
 function App() {
+  const [user, setUser] = useState<User | null>(null);
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [loginEmail, setLoginEmail] = useState("test@test.com");
+  const [loginPassword, setLoginPassword] = useState("password123");
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -30,8 +42,34 @@ function App() {
   };
 
   useEffect(() => {
-    fetchTickets();
-  }, []);
+    if (user) {
+      fetchTickets();
+    }
+  }, [user]);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const response = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: loginEmail,
+        password: loginPassword,
+      }),
+    });
+
+    if (!response.ok) {
+      alert("Login failed");
+      return;
+    }
+
+    const data = await response.json();
+    localStorage.setItem("token", data.token);
+    setUser(data.user);
+  };
 
   const handleCreateTicket = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +84,7 @@ function App() {
         description,
         category,
         priority,
-        customerId: 1,
+        customerId: user?.id,
       }),
     });
 
@@ -63,6 +101,63 @@ function App() {
     fetchTickets();
   };
 
+  const handleStatusChange = async (ticketId: number, newStatus: string) => {
+    const response = await fetch(
+      `http://localhost:5000/api/tickets/${ticketId}/status`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: newStatus,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      alert("Failed to update ticket status");
+      return;
+    }
+
+    fetchTickets();
+  };
+
+  if (!user) {
+    return (
+      <main className="login-page">
+        <section className="login-card">
+          <h1>SupportAI</h1>
+          <p>Sign in to manage customer support tickets.</p>
+
+          <form onSubmit={handleLogin} className="login-form">
+            <label>
+              Email
+              <input
+                type="email"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                required
+              />
+            </label>
+
+            <label>
+              Password
+              <input
+                type="password"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                required
+              />
+            </label>
+
+            <button type="submit">Login</button>
+          </form>
+        </section>
+      </main>
+    );
+  }
+
   const totalTickets = tickets.length;
   const openTickets = tickets.filter((ticket) => ticket.status === "OPEN").length;
   const inProgressTickets = tickets.filter(
@@ -71,28 +166,6 @@ function App() {
   const resolvedTickets = tickets.filter(
     (ticket) => ticket.status === "RESOLVED"
   ).length;
-
-  const handleStatusChange = async (ticketId: number, newStatus: string) => {
-  const response = await fetch(
-    `http://localhost:5000/api/tickets/${ticketId}/status`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        status: newStatus,
-      }),
-    }
-  );
-
-  if (!response.ok) {
-    alert("Failed to update ticket status");
-    return;
-  }
-
-  fetchTickets();
-};
 
   return (
     <main className="app">
@@ -111,9 +184,15 @@ function App() {
         <header className="topbar">
           <div>
             <h2>Customer Support Dashboard</h2>
-            <p>AI-powered ticket monitoring and customer support insights.</p>
+            <p>Logged in as {user.name}</p>
           </div>
-          <button onClick={() => setIsModalOpen(true)}>New Ticket</button>
+
+          <div className="topbar-actions">
+            <button onClick={() => setIsModalOpen(true)}>New Ticket</button>
+            <button className="logout-btn" onClick={() => setUser(null)}>
+              Logout
+            </button>
+          </div>
         </header>
 
         <section className="stats">
@@ -150,10 +229,13 @@ function App() {
 
                 <div className="badges">
                   <span className="priority">{ticket.priority}</span>
+
                   <select
                     className="status-select"
                     value={ticket.status}
-                    onChange={(e) => handleStatusChange(ticket.id, e.target.value)}
+                    onChange={(e) =>
+                      handleStatusChange(ticket.id, e.target.value)
+                    }
                   >
                     <option value="OPEN">OPEN</option>
                     <option value="IN_PROGRESS">IN_PROGRESS</option>
@@ -227,5 +309,5 @@ function App() {
     </main>
   );
 }
-  
-export default App
+
+export default App;

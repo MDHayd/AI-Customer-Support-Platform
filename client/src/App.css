@@ -243,3 +243,63 @@ button {
   font-weight: 700;
   cursor: pointer;
 }
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f7fb;
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  padding: 34px;
+  border-radius: 22px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+}
+
+.login-card h1 {
+  margin: 0;
+  font-size: 34px;
+  color: #101828;
+}
+
+.login-card p {
+  color: #667085;
+  margin-bottom: 26px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 700;
+  color: #344054;
+}
+
+.login-form input {
+  border: 1px solid #d0d5dd;
+  border-radius: 10px;
+  padding: 12px;
+  font: inherit;
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.logout-btn {
+  background: #e5e7eb;
+  color: #172033;
+}
