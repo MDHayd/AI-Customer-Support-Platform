@@ -72,6 +72,28 @@ function App() {
     (ticket) => ticket.status === "RESOLVED"
   ).length;
 
+  const handleStatusChange = async (ticketId: number, newStatus: string) => {
+  const response = await fetch(
+    `http://localhost:5000/api/tickets/${ticketId}/status`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: newStatus,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    alert("Failed to update ticket status");
+    return;
+  }
+
+  fetchTickets();
+};
+
   return (
     <main className="app">
       <aside className="sidebar">
@@ -128,7 +150,15 @@ function App() {
 
                 <div className="badges">
                   <span className="priority">{ticket.priority}</span>
-                  <span className="status">{ticket.status}</span>
+                  <select
+                    className="status-select"
+                    value={ticket.status}
+                    onChange={(e) => handleStatusChange(ticket.id, e.target.value)}
+                  >
+                    <option value="OPEN">OPEN</option>
+                    <option value="IN_PROGRESS">IN_PROGRESS</option>
+                    <option value="RESOLVED">RESOLVED</option>
+                  </select>
                 </div>
               </div>
             ))}

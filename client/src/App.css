@@ -232,3 +232,14 @@ button {
 .submit-btn {
   margin-top: 8px;
 }
+
+.status-select {
+  border: none;
+  background: #dbeafe;
+  color: #1d4ed8;
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
