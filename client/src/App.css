@@ -303,3 +303,11 @@ button {
   background: #e5e7eb;
   color: #172033;
 }
+
+.auth-switch {
+  margin-top: 16px;
+  width: 100%;
+  background: transparent;
+  color: #2563eb;
+  border: 1px solid #dbeafe;
+}

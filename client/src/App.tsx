@@ -34,6 +34,11 @@ function App() {
   const [category, setCategory] = useState("Login Issue");
   const [priority, setPriority] = useState("LOW");
 
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [registerName, setRegisterName] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+
   const fetchTickets = () => {
     fetch("http://localhost:5000/api/tickets")
       .then((res) => res.json())
@@ -69,6 +74,32 @@ function App() {
     const data = await response.json();
     localStorage.setItem("token", data.token);
     setUser(data.user);
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const response = await fetch("http://localhost:5000/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: registerName,
+        email: registerEmail,
+        password: registerPassword,
+      }),
+    });
+
+    if (!response.ok) {
+      alert("Registration failed");
+      return;
+    }
+
+    alert("Account created. You can now log in.");
+    setIsRegistering(false);
+    setLoginEmail(registerEmail);
+    setLoginPassword("");
   };
 
   const handleCreateTicket = async (e: React.FormEvent) => {
@@ -128,31 +159,79 @@ function App() {
       <main className="login-page">
         <section className="login-card">
           <h1>SupportAI</h1>
-          <p>Sign in to manage customer support tickets.</p>
+          <p>
+            {isRegistering
+              ? "Create an account to start submitting support tickets."
+              : "Sign in to manage customer support tickets."}
+          </p>
 
-          <form onSubmit={handleLogin} className="login-form">
-            <label>
-              Email
-              <input
-                type="email"
-                value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
-                required
-              />
-            </label>
+          {isRegistering ? (
+            <form onSubmit={handleRegister} className="login-form">
+              <label>
+                Name
+                <input
+                  value={registerName}
+                  onChange={(e) => setRegisterName(e.target.value)}
+                  required
+                />
+              </label>
 
-            <label>
-              Password
-              <input
-                type="password"
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-                required
-              />
-            </label>
+              <label>
+                Email
+                <input
+                  type="email"
+                  value={registerEmail}
+                  onChange={(e) => setRegisterEmail(e.target.value)}
+                  required
+                />
+              </label>
 
-            <button type="submit">Login</button>
-          </form>
+              <label>
+                Password
+                <input
+                  type="password"
+                  value={registerPassword}
+                  onChange={(e) => setRegisterPassword(e.target.value)}
+                  required
+                />
+              </label>
+
+              <button type="submit">Create Account</button>
+            </form>
+          ) : (
+            <form onSubmit={handleLogin} className="login-form">
+              <label>
+                Email
+                <input
+                  type="email"
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  required
+                />
+              </label>
+
+              <label>
+                Password
+                <input
+                  type="password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  required
+                />
+              </label>
+
+              <button type="submit">Login</button>
+            </form>
+          )}
+
+          <button
+            className="auth-switch"
+            onClick={() => setIsRegistering(!isRegistering)}
+          >
+            {isRegistering
+              ? "Already have an account? Login"
+              : "Need an account? Register"}
+          </button>
         </section>
       </main>
     );
