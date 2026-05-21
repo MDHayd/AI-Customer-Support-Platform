@@ -2138,6 +2138,8 @@ export namespace Prisma {
     category: string | null
     priority: string | null
     status: string | null
+    sentiment: string | null
+    riskLevel: string | null
     customerId: number | null
     createdAt: Date | null
   }
@@ -2149,6 +2151,8 @@ export namespace Prisma {
     category: string | null
     priority: string | null
     status: string | null
+    sentiment: string | null
+    riskLevel: string | null
     customerId: number | null
     createdAt: Date | null
   }
@@ -2160,6 +2164,8 @@ export namespace Prisma {
     category: number
     priority: number
     status: number
+    sentiment: number
+    riskLevel: number
     customerId: number
     createdAt: number
     _all: number
@@ -2183,6 +2189,8 @@ export namespace Prisma {
     category?: true
     priority?: true
     status?: true
+    sentiment?: true
+    riskLevel?: true
     customerId?: true
     createdAt?: true
   }
@@ -2194,6 +2202,8 @@ export namespace Prisma {
     category?: true
     priority?: true
     status?: true
+    sentiment?: true
+    riskLevel?: true
     customerId?: true
     createdAt?: true
   }
@@ -2205,6 +2215,8 @@ export namespace Prisma {
     category?: true
     priority?: true
     status?: true
+    sentiment?: true
+    riskLevel?: true
     customerId?: true
     createdAt?: true
     _all?: true
@@ -2303,6 +2315,8 @@ export namespace Prisma {
     category: string
     priority: string
     status: string
+    sentiment: string
+    riskLevel: string
     customerId: number
     createdAt: Date
     _count: TicketCountAggregateOutputType | null
@@ -2333,6 +2347,8 @@ export namespace Prisma {
     category?: boolean
     priority?: boolean
     status?: boolean
+    sentiment?: boolean
+    riskLevel?: boolean
     customerId?: boolean
     createdAt?: boolean
     customer?: boolean | UserDefaultArgs<ExtArgs>
@@ -2345,6 +2361,8 @@ export namespace Prisma {
     category?: boolean
     priority?: boolean
     status?: boolean
+    sentiment?: boolean
+    riskLevel?: boolean
     customerId?: boolean
     createdAt?: boolean
     customer?: boolean | UserDefaultArgs<ExtArgs>
@@ -2357,6 +2375,8 @@ export namespace Prisma {
     category?: boolean
     priority?: boolean
     status?: boolean
+    sentiment?: boolean
+    riskLevel?: boolean
     customerId?: boolean
     createdAt?: boolean
     customer?: boolean | UserDefaultArgs<ExtArgs>
@@ -2369,11 +2389,13 @@ export namespace Prisma {
     category?: boolean
     priority?: boolean
     status?: boolean
+    sentiment?: boolean
+    riskLevel?: boolean
     customerId?: boolean
     createdAt?: boolean
   }
 
-  export type TicketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "category" | "priority" | "status" | "customerId" | "createdAt", ExtArgs["result"]["ticket"]>
+  export type TicketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "category" | "priority" | "status" | "sentiment" | "riskLevel" | "customerId" | "createdAt", ExtArgs["result"]["ticket"]>
   export type TicketInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -2396,6 +2418,8 @@ export namespace Prisma {
       category: string
       priority: string
       status: string
+      sentiment: string
+      riskLevel: string
       customerId: number
       createdAt: Date
     }, ExtArgs["result"]["ticket"]>
@@ -2828,6 +2852,8 @@ export namespace Prisma {
     readonly category: FieldRef<"Ticket", 'String'>
     readonly priority: FieldRef<"Ticket", 'String'>
     readonly status: FieldRef<"Ticket", 'String'>
+    readonly sentiment: FieldRef<"Ticket", 'String'>
+    readonly riskLevel: FieldRef<"Ticket", 'String'>
     readonly customerId: FieldRef<"Ticket", 'Int'>
     readonly createdAt: FieldRef<"Ticket", 'DateTime'>
   }
@@ -3282,6 +3308,8 @@ export namespace Prisma {
     category: 'category',
     priority: 'priority',
     status: 'status',
+    sentiment: 'sentiment',
+    riskLevel: 'riskLevel',
     customerId: 'customerId',
     createdAt: 'createdAt'
   };
@@ -3441,6 +3469,8 @@ export namespace Prisma {
     category?: StringFilter<"Ticket"> | string
     priority?: StringFilter<"Ticket"> | string
     status?: StringFilter<"Ticket"> | string
+    sentiment?: StringFilter<"Ticket"> | string
+    riskLevel?: StringFilter<"Ticket"> | string
     customerId?: IntFilter<"Ticket"> | number
     createdAt?: DateTimeFilter<"Ticket"> | Date | string
     customer?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -3453,6 +3483,8 @@ export namespace Prisma {
     category?: SortOrder
     priority?: SortOrder
     status?: SortOrder
+    sentiment?: SortOrder
+    riskLevel?: SortOrder
     customerId?: SortOrder
     createdAt?: SortOrder
     customer?: UserOrderByWithRelationInput
@@ -3468,6 +3500,8 @@ export namespace Prisma {
     category?: StringFilter<"Ticket"> | string
     priority?: StringFilter<"Ticket"> | string
     status?: StringFilter<"Ticket"> | string
+    sentiment?: StringFilter<"Ticket"> | string
+    riskLevel?: StringFilter<"Ticket"> | string
     customerId?: IntFilter<"Ticket"> | number
     createdAt?: DateTimeFilter<"Ticket"> | Date | string
     customer?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -3480,6 +3514,8 @@ export namespace Prisma {
     category?: SortOrder
     priority?: SortOrder
     status?: SortOrder
+    sentiment?: SortOrder
+    riskLevel?: SortOrder
     customerId?: SortOrder
     createdAt?: SortOrder
     _count?: TicketCountOrderByAggregateInput
@@ -3499,6 +3535,8 @@ export namespace Prisma {
     category?: StringWithAggregatesFilter<"Ticket"> | string
     priority?: StringWithAggregatesFilter<"Ticket"> | string
     status?: StringWithAggregatesFilter<"Ticket"> | string
+    sentiment?: StringWithAggregatesFilter<"Ticket"> | string
+    riskLevel?: StringWithAggregatesFilter<"Ticket"> | string
     customerId?: IntWithAggregatesFilter<"Ticket"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Ticket"> | Date | string
   }
@@ -3573,6 +3611,8 @@ export namespace Prisma {
     category: string
     priority?: string
     status?: string
+    sentiment?: string
+    riskLevel?: string
     createdAt?: Date | string
     customer: UserCreateNestedOneWithoutTicketsInput
   }
@@ -3584,6 +3624,8 @@ export namespace Prisma {
     category: string
     priority?: string
     status?: string
+    sentiment?: string
+    riskLevel?: string
     customerId: number
     createdAt?: Date | string
   }
@@ -3594,6 +3636,8 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     priority?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sentiment?: StringFieldUpdateOperationsInput | string
+    riskLevel?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: UserUpdateOneRequiredWithoutTicketsNestedInput
   }
@@ -3605,6 +3649,8 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     priority?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sentiment?: StringFieldUpdateOperationsInput | string
+    riskLevel?: StringFieldUpdateOperationsInput | string
     customerId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -3616,6 +3662,8 @@ export namespace Prisma {
     category: string
     priority?: string
     status?: string
+    sentiment?: string
+    riskLevel?: string
     customerId: number
     createdAt?: Date | string
   }
@@ -3626,6 +3674,8 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     priority?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sentiment?: StringFieldUpdateOperationsInput | string
+    riskLevel?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -3636,6 +3686,8 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     priority?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sentiment?: StringFieldUpdateOperationsInput | string
+    riskLevel?: StringFieldUpdateOperationsInput | string
     customerId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -3782,6 +3834,8 @@ export namespace Prisma {
     category?: SortOrder
     priority?: SortOrder
     status?: SortOrder
+    sentiment?: SortOrder
+    riskLevel?: SortOrder
     customerId?: SortOrder
     createdAt?: SortOrder
   }
@@ -3798,6 +3852,8 @@ export namespace Prisma {
     category?: SortOrder
     priority?: SortOrder
     status?: SortOrder
+    sentiment?: SortOrder
+    riskLevel?: SortOrder
     customerId?: SortOrder
     createdAt?: SortOrder
   }
@@ -3809,6 +3865,8 @@ export namespace Prisma {
     category?: SortOrder
     priority?: SortOrder
     status?: SortOrder
+    sentiment?: SortOrder
+    riskLevel?: SortOrder
     customerId?: SortOrder
     createdAt?: SortOrder
   }
@@ -3990,6 +4048,8 @@ export namespace Prisma {
     category: string
     priority?: string
     status?: string
+    sentiment?: string
+    riskLevel?: string
     createdAt?: Date | string
   }
 
@@ -4000,6 +4060,8 @@ export namespace Prisma {
     category: string
     priority?: string
     status?: string
+    sentiment?: string
+    riskLevel?: string
     createdAt?: Date | string
   }
 
@@ -4039,6 +4101,8 @@ export namespace Prisma {
     category?: StringFilter<"Ticket"> | string
     priority?: StringFilter<"Ticket"> | string
     status?: StringFilter<"Ticket"> | string
+    sentiment?: StringFilter<"Ticket"> | string
+    riskLevel?: StringFilter<"Ticket"> | string
     customerId?: IntFilter<"Ticket"> | number
     createdAt?: DateTimeFilter<"Ticket"> | Date | string
   }
@@ -4100,6 +4164,8 @@ export namespace Prisma {
     category: string
     priority?: string
     status?: string
+    sentiment?: string
+    riskLevel?: string
     createdAt?: Date | string
   }
 
@@ -4109,6 +4175,8 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     priority?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sentiment?: StringFieldUpdateOperationsInput | string
+    riskLevel?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4119,6 +4187,8 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     priority?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sentiment?: StringFieldUpdateOperationsInput | string
+    riskLevel?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -4129,6 +4199,8 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     priority?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
+    sentiment?: StringFieldUpdateOperationsInput | string
+    riskLevel?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

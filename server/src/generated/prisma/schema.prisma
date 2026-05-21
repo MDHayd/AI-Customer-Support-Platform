@@ -28,6 +28,8 @@ model Ticket {
   category    String
   priority    String   @default("LOW")
   status      String   @default("OPEN")
+  sentiment   String   @default("NEUTRAL")
+  riskLevel   String   @default("LOW")
   customerId  Int
   customer    User     @relation(fields: [customerId], references: [id])
   createdAt   DateTime @default(now())

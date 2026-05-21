@@ -3,6 +3,7 @@ import cors from "cors";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { prisma } from "./prisma.js";
+import { analyzeSentiment } from "./sentiment.js";
 
 const app = express();
 const PORT = 5000;
@@ -114,6 +115,8 @@ app.post("/api/tickets", async (req, res) => {
   try {
     const { title, description, category, priority, customerId } = req.body;
 
+    const analysis = analyzeSentiment(title + " " + description);
+
     const ticket = await prisma.ticket.create({
       data: {
         title,
@@ -121,6 +124,8 @@ app.post("/api/tickets", async (req, res) => {
         category,
         priority: priority || "LOW",
         customerId,
+        sentiment: analysis.sentiment,
+        riskLevel: analysis.riskLevel,
       },
     });
 

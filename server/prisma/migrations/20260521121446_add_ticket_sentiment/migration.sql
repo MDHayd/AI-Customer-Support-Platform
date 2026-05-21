@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Ticket" ADD COLUMN     "riskLevel" TEXT NOT NULL DEFAULT 'LOW',
+ADD COLUMN     "sentiment" TEXT NOT NULL DEFAULT 'NEUTRAL';

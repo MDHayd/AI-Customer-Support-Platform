@@ -47,6 +47,14 @@ function App() {
   };
 
   useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  useEffect(() => {
     if (user) {
       fetchTickets();
     }
@@ -73,6 +81,7 @@ function App() {
 
     const data = await response.json();
     localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
     setUser(data.user);
   };
 
@@ -263,12 +272,22 @@ function App() {
         <header className="topbar">
           <div>
             <h2>Customer Support Dashboard</h2>
-            <p>Logged in as {user.name}</p>
+            <p>Logged in as {user.name} • {user.role}</p>
           </div>
 
           <div className="topbar-actions">
-            <button onClick={() => setIsModalOpen(true)}>New Ticket</button>
-            <button className="logout-btn" onClick={() => setUser(null)}>
+            {user.role === "CUSTOMER" && (
+              <button onClick={() => setIsModalOpen(true)}>New Ticket</button>
+            )}
+
+            <button
+              className="logout-btn"
+              onClick={() => {
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                setUser(null);
+              }}
+            >
               Logout
             </button>
           </div>
@@ -309,17 +328,19 @@ function App() {
                 <div className="badges">
                   <span className="priority">{ticket.priority}</span>
 
-                  <select
-                    className="status-select"
-                    value={ticket.status}
-                    onChange={(e) =>
-                      handleStatusChange(ticket.id, e.target.value)
-                    }
-                  >
-                    <option value="OPEN">OPEN</option>
-                    <option value="IN_PROGRESS">IN_PROGRESS</option>
-                    <option value="RESOLVED">RESOLVED</option>
-                  </select>
+                  {user.role === "CUSTOMER" ? (
+                    <span className="status">{ticket.status}</span>
+                  ) : (
+                    <select
+                      className="status-select"
+                      value={ticket.status}
+                      onChange={(e) => handleStatusChange(ticket.id, e.target.value)}
+                    >
+                      <option value="OPEN">OPEN</option>
+                      <option value="IN_PROGRESS">IN_PROGRESS</option>
+                      <option value="RESOLVED">RESOLVED</option>
+                    </select>
+                  )}
                 </div>
               </div>
             ))}

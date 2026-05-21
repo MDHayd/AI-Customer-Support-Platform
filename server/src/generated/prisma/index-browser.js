@@ -136,6 +136,8 @@ exports.Prisma.TicketScalarFieldEnum = {
   category: 'category',
   priority: 'priority',
   status: 'status',
+  sentiment: 'sentiment',
+  riskLevel: 'riskLevel',
   customerId: 'customerId',
   createdAt: 'createdAt'
 };
