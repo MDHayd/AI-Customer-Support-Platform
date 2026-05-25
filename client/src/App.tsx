@@ -15,6 +15,8 @@ type Ticket = {
   category: string;
   priority: string;
   status: string;
+  sentiment: string;
+  riskLevel: string;
   customer: {
     name: string;
     email: string;
@@ -39,10 +41,24 @@ function App() {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
 
+  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
+
   const fetchTickets = () => {
     fetch("http://localhost:5000/api/tickets")
       .then((res) => res.json())
-      .then((data) => setTickets(data))
+      .then((data) => {
+        const riskOrder: Record<string, number> = {
+          HIGH: 1,
+          MEDIUM: 2,
+          LOW: 3,
+        };
+
+        const sortedTickets = data.sort((a: Ticket, b: Ticket) => {
+          return riskOrder[a.riskLevel] - riskOrder[b.riskLevel];
+        });
+
+    setTickets(sortedTickets);
+  })
       .catch((error) => console.error("Failed to fetch tickets:", error));
   };
 
@@ -317,7 +333,11 @@ function App() {
 
           <div className="ticket-list">
             {tickets.map((ticket) => (
-              <div className="ticket" key={ticket.id}>
+              <div
+                className="ticket"
+                key={ticket.id}
+                onClick={() => setSelectedTicket(ticket)}
+              >
                 <div>
                   <h4>{ticket.title}</h4>
                   <p>
@@ -328,12 +348,21 @@ function App() {
                 <div className="badges">
                   <span className="priority">{ticket.priority}</span>
 
+                  <span className={`sentiment ${ticket.sentiment.toLowerCase()}`}>
+                    {ticket.sentiment}
+                  </span>
+
+                  <span className={`risk ${ticket.riskLevel.toLowerCase()}`}>
+                    {ticket.riskLevel} RISK
+                  </span>
+
                   {user.role === "CUSTOMER" ? (
                     <span className="status">{ticket.status}</span>
                   ) : (
                     <select
                       className="status-select"
                       value={ticket.status}
+                      onClick={(e) => e.stopPropagation()}
                       onChange={(e) => handleStatusChange(ticket.id, e.target.value)}
                     >
                       <option value="OPEN">OPEN</option>
@@ -403,6 +432,44 @@ function App() {
                 Create Ticket
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {selectedTicket && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h3>{selectedTicket.title}</h3>
+                <button className="close-btn" onClick={() => setSelectedTicket(null)}>
+                  ×
+                </button>
+            </div>
+
+            <div className="ticket-details">
+              <p>
+                <strong>Description:</strong> {selectedTicket.description}
+              </p>
+              <p>
+                <strong>Customer:</strong> {selectedTicket.customer.name} (
+                  {selectedTicket.customer.email})
+              </p>
+              <p>
+                <strong>Category:</strong> {selectedTicket.category}
+              </p>
+              <p>
+                <strong>Priority:</strong> {selectedTicket.priority}
+              </p>
+              <p>
+                <strong>Status:</strong> {selectedTicket.status}
+              </p>
+              <p>
+                <strong>Sentiment:</strong> {selectedTicket.sentiment}
+              </p>
+              <p>
+                <strong>Risk Level:</strong> {selectedTicket.riskLevel}
+              </p>
+            </div>
           </div>
         </div>
       )}

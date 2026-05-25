@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { prisma } from "./prisma.js";
 import { analyzeSentiment } from "./sentiment.js";
+import { generateSuggestedReply } from "./aiReply.js";
 
 const app = express();
 const PORT = 5000;
@@ -209,6 +210,45 @@ app.patch("/api/tickets/:id/status", async (req, res) => {
     });
   }
 });
+
+//----------------------------------------------------------------------------------------
+app.post("/api/ai/suggest-reply", async (req, res) => {
+  try {
+    const { ticketId } = req.body;
+
+    const ticket = await prisma.ticket.findUnique({
+      where: {
+        id: ticketId,
+      },
+    });
+
+    if (!ticket) {
+      return res.status(404).json({
+        message: "Ticket not found",
+      });
+    }
+
+    const suggestedReply = generateSuggestedReply({
+      title: ticket.title,
+      description: ticket.description,
+      category: ticket.category,
+      sentiment: ticket.sentiment,
+      riskLevel: ticket.riskLevel,
+    });
+
+    res.json({
+      suggestedReply,
+    });
+  } catch (error: any) {
+    console.error("AI reply error:", error);
+    res.status(500).json({
+      message: "Failed to generate suggested reply",
+      errorMessage: error.message,
+    });
+  }
+});
+
+//------------------------------------------------------------------------------------------------
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

@@ -311,3 +311,52 @@ button {
   color: #2563eb;
   border: 1px solid #dbeafe;
 }
+
+.sentiment,
+.risk {
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sentiment.negative {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.sentiment.neutral {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.risk.high {
+  background: #fecaca;
+  color: #7f1d1d;
+}
+
+.risk.medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.risk.low {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.ticket {
+  cursor: pointer;
+}
+
+.ticket-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ticket-details p {
+  margin: 0;
+  color: #344054;
+  line-height: 1.5;
+}
