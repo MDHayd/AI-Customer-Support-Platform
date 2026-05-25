@@ -43,6 +43,8 @@ function App() {
 
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
 
+  const [aiReply, setAiReply] = useState("");
+
   const fetchTickets = () => {
     fetch("http://localhost:5000/api/tickets")
       .then((res) => res.json())
@@ -178,6 +180,35 @@ function App() {
 
     fetchTickets();
   };
+
+  const handleGenerateReply = async (ticketId: number) => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/ai/suggest-reply",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ticketId,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        alert("Failed to generate AI reply");
+        return;
+      }
+
+      const data = await response.json();
+
+      setAiReply(data.suggestedReply);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
   if (!user) {
     return (
@@ -468,6 +499,18 @@ function App() {
               </p>
               <p>
                 <strong>Risk Level:</strong> {selectedTicket.riskLevel}
+                <button
+                  className="ai-btn"
+                  onClick={() => handleGenerateReply(selectedTicket.id)}
+                >
+                Generate AI Reply
+                </button>
+                {aiReply && (
+                  <div className="ai-reply-box">
+                    <h4>AI Suggested Reply</h4>
+                    <p>{aiReply}</p>
+                  </div>
+                )}
               </p>
             </div>
           </div>

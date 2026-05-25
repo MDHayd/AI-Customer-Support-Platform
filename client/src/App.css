@@ -360,3 +360,28 @@ button {
   color: #344054;
   line-height: 1.5;
 }
+
+.ai-btn {
+  margin-top: 12px;
+  width: 100%;
+}
+
+.ai-reply-box {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 14px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+.ai-reply-box h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #1d4ed8;
+}
+
+.ai-reply-box p {
+  margin: 0;
+  line-height: 1.6;
+  color: #1e293b;
+}
