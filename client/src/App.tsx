@@ -21,6 +21,7 @@ type Ticket = {
     name: string;
     email: string;
   };
+  resolution: string | null;
 };
 
 function App() {
@@ -44,6 +45,8 @@ function App() {
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
 
   const [aiReply, setAiReply] = useState("");
+
+  const [resolutionText, setResolutionText] = useState("");
 
   const fetchTickets = () => {
     fetch("http://localhost:5000/api/tickets")
@@ -207,6 +210,35 @@ function App() {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleResolveTicket = async (ticketId: number) => {
+    if (!resolutionText.trim()) {
+      alert("Please enter a resolution before resolving the ticket.");
+      return;
+    }
+
+    const response = await fetch(
+      `http://localhost:5000/api/tickets/${ticketId}/resolve`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          resolution: resolutionText,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      alert("Failed to resolve ticket");
+      return;
+    }
+
+    setResolutionText("");
+    setSelectedTicket(null);
+    fetchTickets();
   };
 
 
@@ -499,6 +531,28 @@ function App() {
               </p>
               <p>
                 <strong>Risk Level:</strong> {selectedTicket.riskLevel}
+                {selectedTicket.resolution && (
+                  <p>
+                    <strong>Resolution:</strong> {selectedTicket.resolution}
+                  </p>
+                )}
+
+                {user.role !== "CUSTOMER" && selectedTicket.status !== "RESOLVED" && (
+                  <div className="resolve-box">
+                    <label>
+                      Resolution Notes
+                      <textarea
+                        value={resolutionText}
+                        onChange={(e) => setResolutionText(e.target.value)}
+                        placeholder="Describe how this issue was resolved..."
+                      />
+                    </label>
+
+                    <button onClick={() => handleResolveTicket(selectedTicket.id)}>
+                      Resolve Ticket
+                    </button>
+                  </div>
+                  )}
                 <button
                   className="ai-btn"
                   onClick={() => handleGenerateReply(selectedTicket.id)}

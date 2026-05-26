@@ -250,6 +250,42 @@ app.post("/api/ai/suggest-reply", async (req, res) => {
 
 //------------------------------------------------------------------------------------------------
 
+app.patch("/api/tickets/:id/resolve", async (req, res) => {
+  try {
+    const ticketId = Number(req.params.id);
+    const { resolution } = req.body;
+
+    if (!resolution) {
+      return res.status(400).json({
+        message: "Resolution is required",
+      });
+    }
+
+    const updatedTicket = await prisma.ticket.update({
+      where: {
+        id: ticketId,
+      },
+      data: {
+        status: "RESOLVED",
+        resolution,
+      },
+    });
+
+    res.json({
+      message: "Ticket resolved successfully",
+      ticket: updatedTicket,
+    });
+  } catch (error: any) {
+    console.error("Resolve ticket error:", error);
+    res.status(500).json({
+      message: "Failed to resolve ticket",
+      errorMessage: error.message,
+    });
+  }
+});
+
+//-------------------------------------------------------------------------------------------
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

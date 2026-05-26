@@ -385,3 +385,29 @@ button {
   line-height: 1.6;
   color: #1e293b;
 }
+
+.resolve-box {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.resolve-box label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 700;
+  color: #344054;
+}
+
+.resolve-box textarea {
+  border: 1px solid #d0d5dd;
+  border-radius: 10px;
+  padding: 12px;
+  font: inherit;
+  min-height: 100px;
+  resize: vertical;
+}
