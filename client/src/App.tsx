@@ -48,6 +48,8 @@ function App() {
 
   const [resolutionText, setResolutionText] = useState("");
 
+  const [similarSolutions, setSimilarSolutions] = useState<any[]>([]);
+
   const fetchTickets = () => {
     fetch("http://localhost:5000/api/tickets")
       .then((res) => res.json())
@@ -239,6 +241,29 @@ function App() {
     setResolutionText("");
     setSelectedTicket(null);
     fetchTickets();
+  };
+
+  const handleFindSimilarSolutions = async (ticketId: number) => {
+    const response = await fetch(
+      "http://localhost:5000/api/ai/similar-solutions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ticketId,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      alert("Failed to find similar solutions");
+      return;
+    }
+
+    const data = await response.json();
+    setSimilarSolutions(data.suggestions);
   };
 
 
@@ -500,8 +525,15 @@ function App() {
       )}
 
       {selectedTicket && (
-        <div className="modal-overlay">
-          <div className="modal">
+        <div
+          className="modal-overlay"
+          onClick={() => {
+            setSelectedTicket(null);
+            setAiReply("");
+            setSimilarSolutions([]);
+          }}
+        >
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>{selectedTicket.title}</h3>
                 <button className="close-btn" onClick={() => setSelectedTicket(null)}>
@@ -564,6 +596,34 @@ function App() {
                     <h4>AI Suggested Reply</h4>
                     <p>{aiReply}</p>
                   </div>
+                )}
+
+                <button
+                  className="ai-btn"
+                  onClick={() => handleFindSimilarSolutions(selectedTicket.id)}
+                >
+                Find Similar Solutions
+                </button>
+
+                {similarSolutions.length > 0 && (
+                <div className="solutions-box">
+                  <h4>Similar Past Solutions</h4>
+
+                  {similarSolutions.map((solution) => (
+                    <div className="solution-card" key={solution.id}>
+                      <h5>{solution.title}</h5>
+                      <p>
+                        <strong>Category:</strong> {solution.category}
+                      </p>
+                      <p>
+                        <strong>Match Score:</strong> {solution.score}
+                      </p>
+                      <p>
+                        <strong>Resolution:</strong> {solution.resolution}
+                      </p>
+                    </div>
+                  ))}
+                </div>
                 )}
               </p>
             </div>

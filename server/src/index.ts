@@ -286,6 +286,82 @@ app.patch("/api/tickets/:id/resolve", async (req, res) => {
 
 //-------------------------------------------------------------------------------------------
 
+app.post("/api/ai/similar-solutions", async (req, res) => {
+  try {
+    const { ticketId } = req.body;
+
+    const currentTicket = await prisma.ticket.findUnique({
+      where: {
+        id: ticketId,
+      },
+    });
+
+    if (!currentTicket) {
+      return res.status(404).json({
+        message: "Ticket not found",
+      });
+    }
+
+    const resolvedTickets = await prisma.ticket.findMany({
+      where: {
+        status: "RESOLVED",
+        resolution: {
+          not: null,
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    const currentWords = `${currentTicket.title} ${currentTicket.description}`
+      .toLowerCase()
+      .split(/\W+/)
+      .filter((word) => word.length > 3);
+
+    const suggestions = resolvedTickets
+      .map((ticket) => {
+        const pastWords = `${ticket.title} ${ticket.description}`
+          .toLowerCase()
+          .split(/\W+/)
+          .filter((word) => word.length > 3);
+
+        const sharedWords = currentWords.filter((word) =>
+          pastWords.includes(word)
+        );
+
+        let score = sharedWords.length;
+
+        if (ticket.category === currentTicket.category) {
+          score += 3;
+        }
+
+        return {
+          id: ticket.id,
+          title: ticket.title,
+          category: ticket.category,
+          resolution: ticket.resolution,
+          score,
+        };
+      })
+      .filter((ticket) => ticket.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+
+    res.json({
+      suggestions,
+    });
+  } catch (error: any) {
+    console.error("Similar solutions error:", error);
+    res.status(500).json({
+      message: "Failed to find similar solutions",
+      errorMessage: error.message,
+    });
+  }
+});
+
+//-------------------------------------------------------------------------------------
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
