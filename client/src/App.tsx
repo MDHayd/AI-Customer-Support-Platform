@@ -134,15 +134,15 @@ function App() {
     setLoginPassword("");
   };
 
-  const handleCreateTicket = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCreateTicket = async (e: React.FormEvent) => { //runs when format is submitted
+    e.preventDefault(); //stop browser from refreshing whole page , allowing React to handle submission itself
 
     const response = await fetch("http://localhost:5000/api/tickets", {
-      method: "POST",
+      method: "POST",  //Frontend sends request to backend (Post = create new data) (await = wait for backend to respond before continuing)
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json",  //data being sent is JSON
       },
-      body: JSON.stringify({
+      body: JSON.stringify({   //converts object to JSON text
         title,
         description,
         category,
@@ -152,11 +152,11 @@ function App() {
     });
 
     if (!response.ok) {
-      alert("Failed to create ticket");
+      alert("Failed to create ticket");       //if backend returns a fail/error message 
       return;
     }
 
-    setTitle("");
+    setTitle("");    //React state values returned to their default forms
     setDescription("");
     setCategory("Login Issue");
     setPriority("LOW");

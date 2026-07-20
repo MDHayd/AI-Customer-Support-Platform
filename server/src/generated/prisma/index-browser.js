@@ -143,6 +143,14 @@ exports.Prisma.TicketScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.MessageScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  sender: 'sender',
+  content: 'content',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -161,7 +169,8 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Ticket: 'Ticket'
+  Ticket: 'Ticket',
+  Message: 'Message'
 };
 
 /**

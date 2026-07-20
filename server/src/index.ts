@@ -8,9 +8,9 @@ import { generateSuggestedReply } from "./aiReply.js";
 
 const app = express();
 const PORT = 5000;
-const JWT_SECRET = "dev_secret_key";
+const JWT_SECRET = "dev_secret_key";  //For development stored in code. In production, move to a .env file 
 
-app.use(cors());
+app.use(cors());            //Middleware
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -112,18 +112,20 @@ app.post("/api/auth/login", async (req, res) => {
   }
 });
 
-app.post("/api/tickets", async (req, res) => {
+//-----------------------------------------------------------------------------------------------------
+
+app.post("/api/tickets", async (req, res) => {  //Express looks for route with the same HTTP method (post) and path. How Expressknows which code to run
   try {
-    const { title, description, category, priority, customerId } = req.body;
+    const { title, description, category, priority, customerId } = req.body; //req = incoming requets, req.body = contains the JSON sent by React
+                                                                             //extracts individual fields from that body
+    const analysis = analyzeSentiment(title + " " + description);            //The backend combines the ticket title and description and passes them into the sentiment-analysis function.
 
-    const analysis = analyzeSentiment(title + " " + description);
-
-    const ticket = await prisma.ticket.create({
+    const ticket = await prisma.ticket.create({  //ask prisma  to create a new row in the ticket table
       data: {
         title,
         description,
         category,
-        priority: priority || "LOW",
+        priority: priority || "LOW",  //if no priority, default is LOW
         customerId,
         sentiment: analysis.sentiment,
         riskLevel: analysis.riskLevel,
@@ -131,7 +133,7 @@ app.post("/api/tickets", async (req, res) => {
     });
 
     res.status(201).json({
-      message: "Ticket created successfully",
+      message: "Ticket created successfully",  //Sends if successful, also sends the frontend the success message
       ticket,
     });
   } catch (error: any) {
